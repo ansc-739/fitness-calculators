@@ -20,24 +20,50 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('FFMI-Button konnte nicht gefunden werden');
     }
     
-    // Eingaben bei Enter-Taste absenden
-    const bmiInputs = document.querySelectorAll('#bmi input[type="number"]');
-    bmiInputs.forEach(input => {
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                calculateBMI();
-            }
-        });
-    });
+    // 1RM Rechner initialisieren
+    const ormCalculateBtn = document.getElementById('orm-calculate');
+    if (ormCalculateBtn) {
+        console.log('1RM-Button gefunden, füge Event-Listener hinzu');
+        ormCalculateBtn.addEventListener('click', calculateORM);
+    } else {
+        console.error('1RM-Button konnte nicht gefunden werden');
+    }
     
-    const ffmiInputs = document.querySelectorAll('#ffmi input[type="number"]');
-    ffmiInputs.forEach(input => {
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                calculateFFMI();
-            }
+    // Kalorien Rechner initialisieren
+    const calCalculateBtn = document.getElementById('cal-calculate');
+    if (calCalculateBtn) {
+        console.log('Kalorien-Button gefunden, füge Event-Listener hinzu');
+        calCalculateBtn.addEventListener('click', calculateCalories);
+    } else {
+        console.error('Kalorien-Button konnte nicht gefunden werden');
+    }
+    
+    // Muskelaufbaupotenzial Rechner initialisieren
+    const mpCalculateBtn = document.getElementById('mp-calculate');
+    if (mpCalculateBtn) {
+        console.log('Muskelaufbaupotenzial-Button gefunden, füge Event-Listener hinzu');
+        mpCalculateBtn.addEventListener('click', calculateMusclePotential);
+    } else {
+        console.error('Muskelaufbaupotenzial-Button konnte nicht gefunden werden');
+    }
+    
+    // Eingaben bei Enter-Taste absenden
+    const setupEnterKey = (sectionId, calculateFunction) => {
+        const inputs = document.querySelectorAll(`#${sectionId} input[type="number"]`);
+        inputs.forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calculateFunction();
+                }
+            });
         });
-    });
+    };
+    
+    setupEnterKey('bmi', calculateBMI);
+    setupEnterKey('ffmi', calculateFFMI);
+    setupEnterKey('oneRM', calculateORM);
+    setupEnterKey('calories', calculateCalories);
+    setupEnterKey('musclepotential', calculateMusclePotential);
 });
 
 // BMI berechnen
@@ -245,4 +271,155 @@ function calculateFFMI() {
     `;
     
     console.log('FFMI-Berechnung abgeschlossen');
+}
+
+// 1RM berechnen
+function calculateORM() {
+    console.log('1RM-Berechnung gestartet');
+    
+    const weight = parseFloat(document.getElementById('orm-weight').value);
+    const reps = parseInt(document.getElementById('orm-reps').value);
+    const formula = document.querySelector('input[name="orm-formula"]:checked').value;
+    const resultElement = document.getElementById('orm-result');
+    
+    console.log(`Eingegebene Werte: Gewicht=${weight}kg, Wiederholungen=${reps}, Formel=${formula}`);
+    
+    // Validierung
+    if (isNaN(weight) || isNaN(reps) || weight <= 0 || reps <= 0 || reps > 30) {
+        console.log('Ungültige Eingaben');
+        resultElement.innerHTML = '<div class="result-placeholder">Bitte gib gültige Werte ein.</div>';
+        return;
+    }
+    
+    // 1RM Berechnung je nach Formel
+    let oneRM = 0;
+    if (formula === 'brzycki') {
+        // Brzycki Formel
+        oneRM = weight * (36 / (37 - reps));
+    } else {
+        // Epley Formel
+        oneRM = weight * (1 + 0.0333 * reps);
+    }
+    
+    console.log(`Berechnetes 1RM: ${oneRM.toFixed(1)}kg`);
+    
+    // Tabelle mit prozentualem Anteil des 1RM erstellen
+    const percentages = [100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50];
+    let tableHTML = `
+        <table class="result-table">
+            <thead>
+                <tr>
+                    <th>% des 1RM</th>
+                    <th>Gewicht (kg)</th>
+                    <th>Mögliche Wdh.</th>
+                </tr>
+            </thead>
+            <tbody>`;
+    
+    percentages.forEach(percentage => {
+        const weight = (oneRM * (percentage / 100)).toFixed(1);
+        // Geschätzte mögliche Wiederholungen je nach Prozentsatz
+        let estimatedReps = "";
+        
+        if (percentage <= 55) estimatedReps = "20+";
+        else if (percentage <= 60) estimatedReps = "18-20";
+        else if (percentage <= 65) estimatedReps = "15-17";
+        else if (percentage <= 70) estimatedReps = "12-15";
+        else if (percentage <= 75) estimatedReps = "10-12";
+        else if (percentage <= 80) estimatedReps = "8-10";
+        else if (percentage <= 85) estimatedReps = "5-8";
+        else if (percentage <= 90) estimatedReps = "3-5";
+        else if (percentage <= 95) estimatedReps = "1-3";
+        else estimatedReps = "1";
+        
+        tableHTML += `
+            <tr>
+                <td>${percentage}%</td>
+                <td>${weight} kg</td>
+                <td>${estimatedReps}</td>
+            </tr>`;
+    });
+    
+    tableHTML += `
+            </tbody>
+        </table>`;
+    
+    // Ergebnis anzeigen
+    resultElement.innerHTML = `
+        <div class="result-highlight">${oneRM.toFixed(1)} kg</div>
+        <div class="result-category text-primary">Dein geschätztes 1RM</div>
+        <p>Berechnet mit der ${formula === 'brzycki' ? 'Brzycki' : 'Epley'} Formel</p>
+        <p>Auf Basis von ${weight} kg für ${reps} Wiederholungen</p>
+        ${tableHTML}
+    `;
+    
+    console.log('1RM-Berechnung abgeschlossen');
+}
+
+// Kalorien berechnen
+function calculateCalories() {
+    console.log('Kalorien-Berechnung gestartet');
+    
+    const weight = parseFloat(document.getElementById('cal-weight').value);
+    const height = parseFloat(document.getElementById('cal-height').value);
+    const age = parseInt(document.getElementById('cal-age').value);
+    const gender = document.querySelector('input[name="cal-gender"]:checked').value;
+    const activity = parseFloat(document.getElementById('cal-activity').value);
+    const resultElement = document.getElementById('cal-result');
+    
+    console.log(`Eingegebene Werte: Gewicht=${weight}kg, Größe=${height}cm, Alter=${age}, Geschlecht=${gender}, Aktivität=${activity}`);
+    
+    // Validierung
+    if (isNaN(weight) || isNaN(height) || isNaN(age) || weight <= 0 || height <= 0 || age <= 0) {
+        console.log('Ungültige Eingaben');
+        resultElement.innerHTML = '<div class="result-placeholder">Bitte gib gültige Werte ein.</div>';
+        return;
+    }
+    
+    // Grundumsatz mit Harris-Benedict-Formel berechnen
+    let bmr = 0;
+    if (gender === 'male') {
+        // Männer
+        bmr = 66.5 + (13.75 * weight) + (5.003 * height) - (6.755 * age);
+    } else {
+        // Frauen
+        bmr = 655.1 + (9.563 * weight) + (1.85 * height) - (4.676 * age);
+    }
+    
+    // Gesamtumsatz berechnen (BMR * Aktivitätsfaktor)
+    const tdee = bmr * activity;
+    
+    console.log(`Berechneter Grundumsatz: ${bmr.toFixed(0)} kcal, Gesamtumsatz: ${tdee.toFixed(0)} kcal`);
+    
+    // Makronährstoffempfehlungen berechnen
+    const protein = weight * 1.8; // 1.8g Protein pro kg Körpergewicht
+    const fat = (tdee * 0.25) / 9; // 25% der Kalorien aus Fett (9 kcal pro Gramm)
+    const carbs = (tdee - (protein * 4) - (fat * 9)) / 4; // Rest aus Kohlenhydraten (4 kcal pro Gramm)
+    
+    // Kalorien für verschiedene Ziele berechnen
+    const cutTdee = tdee * 0.8; // Kaloriendefizit (20%)
+    const bulkTdee = tdee * 1.1; // Kalorienüberschuss (10%)
+    
+    // Ergebnis anzeigen
+    resultElement.innerHTML = `
+        <div class="result-highlight">${tdee.toFixed(0)} kcal</div>
+        <div class="result-category text-primary">Dein täglicher Kalorienbedarf</div>
+        <p>Grundumsatz (BMR): ${bmr.toFixed(0)} kcal</p>
+        <p>Gesamtumsatz (TDEE): ${tdee.toFixed(0)} kcal</p>
+        
+        <div class="result-section">
+            <h3>Ziele:</h3>
+            <p>Abnehmen: ${cutTdee.toFixed(0)} kcal</p>
+            <p>Muskelaufbau: ${bulkTdee.toFixed(0)} kcal</p>
+        </div>
+        
+        <div class="result-section">
+            <h3>Empfohlene Makronährstoffverteilung:</h3>
+            <p>Protein: ${protein.toFixed(0)}g (${(protein * 4).toFixed(0)} kcal)</p>
+            <p>Fett: ${fat.toFixed(0)}g (${(fat * 9).toFixed(0)} kcal)</p>
+            <p>Kohlenhydrate: ${carbs.toFixed(0)}g (${(carbs * 4).toFixed(0)} kcal)</p>
+        </div>
+    `;
+    
+    console.log('Kalorien-Berechnung abgeschlossen');
 }
