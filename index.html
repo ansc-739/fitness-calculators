@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness-Rechner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Fitness-Rechner</h1>
+            <p>Deine Anlaufstelle für präzise Fitness-Berechnungen</p>
+            <nav>
+                <ul>
+                    <li><a href="#bmi">BMI</a></li>
+                    <li><a href="#ffmi">FFMI</a></li>
+                    <!-- Später weitere Rechner hinzufügen -->
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="calculator-grid">
+                <!-- BMI Rechner -->
+                <div id="bmi" class="calculator-card glass-card">
+                    <h2 class="section-title">BMI-Rechner</h2>
+                    <p class="description">Der Body-Mass-Index (BMI) gibt Aufschluss über dein Verhältnis von Gewicht zu Körpergröße.</p>
+                    
+                    <div class="form-group">
+                        <label for="bmi-weight">Gewicht (kg)</label>
+                        <input type="number" id="bmi-weight" min="30" max="300" step="0.1" placeholder="z.B. 75">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bmi-height">Größe (cm)</label>
+                        <input type="number" id="bmi-height" min="120" max="250" step="0.1" placeholder="z.B. 180">
+                    </div>
+                    
+                    <button id="bmi-calculate" class="neuro-button">Berechnen</button>
+                    
+                    <div id="bmi-result" class="result-card">
+                        <div class="result-placeholder">Dein BMI wird hier angezeigt</div>
+                    </div>
+                </div>
+                
+                <!-- FFMI Rechner -->
+                <div id="ffmi" class="calculator-card glass-card">
+                    <h2 class="section-title">FFMI-Rechner</h2>
+                    <p class="description">Der Fat-Free Mass Index (FFMI) bewertet deine fettfreie Muskelmasse im Verhältnis zur Körpergröße.</p>
+                    
+                    <div class="form-group">
+                        <label for="ffmi-weight">Gewicht (kg)</label>
+                        <input type="number" id="ffmi-weight" min="30" max="300" step="0.1" placeholder="z.B. 75">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ffmi-height">Größe (cm)</label>
+                        <input type="number" id="ffmi-height" min="120" max="250" step="0.1" placeholder="z.B. 180">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ffmi-bodyfat">Körperfett (%)</label>
+                        <input type="number" id="ffmi-bodyfat" min="3" max="50" step="0.1" placeholder="z.B. 15">
+                    </div>
+                    
+                    <button id="ffmi-calculate" class="neuro-button">Berechnen</button>
+                    
+                    <div id="ffmi-result" class="result-card">
+                        <div class="result-placeholder">Dein FFMI wird hier angezeigt</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Fitness-Rechner  | Alle Rechte vorbehalten</p>
+        </div>
+    </footer>
+</body>
+</html>
