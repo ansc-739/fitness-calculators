@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fitness-Rechner</title>
+    <title>Fitness-Rechner Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
@@ -11,7 +11,7 @@
 <body>
     <header>
         <div class="container">
-            <h1>Fitness-Rechner</h1>
+            <h1>Fitness-Rechner Hub</h1>
             <p>Deine Anlaufstelle für präzise Fitness-Berechnungen</p>
             <nav>
                 <ul>
@@ -41,6 +41,20 @@
                         <input type="number" id="bmi-height" min="120" max="250" step="0.1" placeholder="z.B. 180">
                     </div>
                     
+                    <div class="form-group">
+                        <label>Geschlecht</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="bmi-gender" value="male" checked>
+                                <span>Männlich</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="bmi-gender" value="female">
+                                <span>Weiblich</span>
+                            </label>
+                        </div>
+                    </div>
+                    
                     <button id="bmi-calculate" class="neuro-button">Berechnen</button>
                     
                     <div id="bmi-result" class="result-card">
@@ -68,6 +82,20 @@
                         <input type="number" id="ffmi-bodyfat" min="3" max="50" step="0.1" placeholder="z.B. 15">
                     </div>
                     
+                    <div class="form-group">
+                        <label>Geschlecht</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="ffmi-gender" value="male" checked>
+                                <span>Männlich</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="ffmi-gender" value="female">
+                                <span>Weiblich</span>
+                            </label>
+                        </div>
+                    </div>
+                    
                     <button id="ffmi-calculate" class="neuro-button">Berechnen</button>
                     
                     <div id="ffmi-result" class="result-card">
@@ -80,7 +108,7 @@
     
     <footer>
         <div class="container">
-            <p>&copy; 2025 Fitness-Rechner  | Alle Rechte vorbehalten</p>
+            <p>&copy; 2025 Fitness-Rechner Hub | Alle Rechte vorbehalten</p>
         </div>
     </footer>
 </body>
